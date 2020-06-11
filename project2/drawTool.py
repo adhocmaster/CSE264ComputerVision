@@ -8,12 +8,27 @@ import numpy as np
 
 # takes input image and ask to give 4 consicutive points and crop and calculate RGB channel
 
-if len(sys.argv) != 2:
-    print(" No input given  %s " % sys.argv[0])
+
+if len(sys.argv) < 2:
+    print("Not enough parameters")
+    print( sys.argv )
     sys.exit(-1)
-    
-_, IMG_FILENAME = sys.argv
-IMG_FILENAME = 'images/' + IMG_FILENAME + '.jpg'
+
+lineOutputFile = None
+
+if len(sys.argv) == 2:
+    _, IMG_FILENAME = sys.argv
+else:
+    _, IMG_FILENAME, lineOutputFile = sys.argv
+
+IMG_FILENAME = 'images/' + IMG_FILENAME 
+
+
+if lineOutputFile is None:
+    lineOutputFile = 'buildingLines'
+
+else:
+    lineOutputFile = lineOutputFile + '.npy'
 
 
 
@@ -67,9 +82,9 @@ canvas.bind('<Button-1>', on_click)
 canvas.create_image((0,0), anchor=tkinter.NW, image=IMG)
 
 def onClose(e):
-    np.save('buildingLines.npy', np.array(lines))
+    np.save(lineOutputFile, np.array(lines))
     master.destroy()
-    print('saved line points in buildingLines.npy')
+    print(f'saved line points in {lineOutputFile}')
 
 master.bind('<Escape>', onClose)
 master.mainloop()
